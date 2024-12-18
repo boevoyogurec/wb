@@ -17,3 +17,4 @@ df['phone_number'] = df['phone_number'].apply(clean_phone_number)
 # Сохранение результата в новый файл Excel
 output_file = 'cleaned_phone_numbers.xlsx'
 df.to_excel(output_file, index=False, engine='openpyxl')
+
