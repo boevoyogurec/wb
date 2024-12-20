@@ -1,21 +1,30 @@
 import pandas as pd
-import re
+from openpyxl import load_workbook
 
-# Функция для очистки номера телефона
 def clean_phone_number(phone):
-    # Удаляем все символы, кроме цифр
-    cleaned = re.sub(r'\D', '', phone)
-    return cleaned
+    # Преобразуем значение в строку, если оно число
+    if isinstance(phone, int) or isinstance(phone, float):
+        phone = str(int(phone))
 
-# Чтение файла Excel
-input_file = 'phone_numbers.xlsx'
-df = pd.read_excel(input_file, engine='openpyxl')
+    # Убираем все символы кроме цифр
+    return ''.join([char for char in phone if char.isdigit()])
 
-# Предполагаем, что номера телефонов находятся в столбце с именем 'Телефон'
-df['phone_number'] = df['phone_number'].apply(clean_phone_number)
+# Загружаем исходный файл
+input_file = 'phone_numbers.xlsx' # изменить на свой путь
+df = pd.read_excel(input_file)
 
-# Сохранение результата в новый файл Excel
-output_file = 'cleaned_phone_numbers.xlsx'
-df.to_excel(output_file, index=False, engine='openpyxl')
+# Указываем имя столбца с номерами телефонов
+phone_column_name = 'phone_number'
 
-#что-то неопнятное
+# Проверяем наличие столбца
+if phone_column_name not in df.columns:
+    print(f"Столбец '{phone_column_name}' отсутствует в файле.")
+else:
+    # Очищаем номера телефонов
+    df[phone_column_name] = df[phone_column_name].apply(clean_phone_number)
+
+    # Сохраняем результат в новый файл
+    output_file = 'cleaned_phones.xlsx'
+    writer = pd.ExcelWriter(output_file, engine='openpyxl')
+    df.to_excel(writer, index=False)
+    writer.close()  # Используем close() вместо save()
