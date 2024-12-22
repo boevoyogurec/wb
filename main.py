@@ -1,18 +1,6 @@
-import pandas as pd
-from openpyxl import load_workbook
+from function import *
 
-def clean_phone_number(phone):
-    # Преобразуем значение в строку, если оно число
-    if isinstance(phone, int) or isinstance(phone, float):
-        phone = str(int(phone))
-
-    # Убираем все символы кроме цифр
-    return ''.join([char for char in phone if char.isdigit()])
-
-# Загружаем исходный файл
-input_file = 'phone_numbers.xlsx' # изменить на свой путь
-df = pd.read_excel(input_file)
-
+df = input_excel_file('phone_numbers.xlsx') # изменить на свой путь
 # Указываем имя столбца с номерами телефонов
 phone_column_name = 'phone_number'
 
